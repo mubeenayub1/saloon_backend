@@ -1,0 +1,36 @@
+import express from "express";
+import {
+  register,
+  login,
+  getAllUsers,
+  UpdateProfile,
+  deleteCustomerById,
+  UpdateStatus,
+  getUserById,
+} from "../controller/userController.js";
+// import AuthMiddleware from "../middleware/isAuth.js";
+import jwt from "jsonwebtoken";
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  if (token == null) return res.sendStatus(401);
+
+  jwt.verify(token, "somesecretsecret", (err, user) => {
+    if (err) return res.sendStatus(403);
+    req.user = user;
+    next();
+  });
+};
+const userRoute = express.Router();
+
+userRoute.route("/register").post(register);
+userRoute.route("/login").post(login);
+userRoute.route("/getAll").get(getAllUsers);
+userRoute.route("/get").get(authenticateToken, getUserById);
+userRoute.route("/update").put(authenticateToken, UpdateProfile);
+userRoute.route("/updateStatus/:id").put(UpdateStatus);
+userRoute.route("/delete").delete(authenticateToken, deleteCustomerById);
+
+export default userRoute;
+// 91867769407
+
