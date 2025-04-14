@@ -7,7 +7,7 @@ import { Server } from "socket.io";
 import cors from "cors";
 import http from "http";
 import userRoute from "./routes/userRoute.js";
-
+import vendorRoute from "./routes/vendorRoute.js";
 connectDB();
 import { createServer } from "http";
 // Use Middlewares
@@ -26,6 +26,7 @@ app.use(
 const server = createServer(app);
 
 app.use("/user", userRoute);
+app.use("/vendor", vendorRoute);
 
 app.get("/", async (req, res) => {
   res.send("App Is Running");

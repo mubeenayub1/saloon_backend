@@ -1,6 +1,7 @@
 import { catchAsyncError } from "../middleware/catchAsyncError.js";
 // import { Customer } from "../model/customer.js";
 import { User } from "../model/User.js";
+import { Vendor } from "../model/Vendor.js";
 import jwt from "jsonwebtoken";
 import cloudinary from "cloudinary";
 cloudinary.v2.config({
@@ -9,14 +10,30 @@ cloudinary.v2.config({
   api_secret: "w35Ei6uCvbOcaN4moWBKL3BmW4Q",
 });
 // register user
-export const register = catchAsyncError(async (req, res, next) => {
+export const registerVendor = catchAsyncError(async (req, res, next) => {
   const data = req.body;
   const email = data?.email;
-  const existingUser = await User.findOne({ email });
+  const existingUser = await Vendor.findOne({ email });
   if (existingUser) {
     res.status(400).json({ message: "Email already exist", status: "fail" });
   } else {
-    const newUser = await User.create(data);
+    let updatedFields = { ...data };
+
+    if (req.files && req.files.profileImage) {
+      let image = req.files.profileImage;
+
+      // Uploading to Cloudinary folder "my_app/images"
+      const result = await cloudinary.v2.uploader.upload(image.tempFilePath, {
+        folder: "images", // change this to your desired folder path
+      });
+
+      updatedFields.profileImage = result.secure_url; // it's better to use secure_url
+    } else {
+      return res
+        .status(400)
+        .json({ message: "Please select profile image", status: "fail" });
+    }
+    const newUser = await Vendor.create(updatedFields);
     const token = jwt.sign(
       {
         userId: newUser._id.toString(),
@@ -26,7 +43,7 @@ export const register = catchAsyncError(async (req, res, next) => {
     );
     res.status(200).json({
       status: "success",
-      message: "User registered successfully",
+      message: "Vendor registered successfully",
       data: newUser,
       token: token,
     });
@@ -34,14 +51,14 @@ export const register = catchAsyncError(async (req, res, next) => {
 });
 
 // login user
-export const login = catchAsyncError(async (req, res, next) => {
+export const loginVendor = catchAsyncError(async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    const existingUser = await User.findOne({ email, password });
+    const existingUser = await Vendor.findOne({ email, password });
     if (!existingUser) {
       res.status(400).json({ message: "User not exist", status: "fail" });
     }
-    const user = await User.findOne({ email, password });
+    const user = await Vendor.findOne({ email, password });
     const token = jwt.sign(
       {
         userId: user._id.toString(),
@@ -51,7 +68,7 @@ export const login = catchAsyncError(async (req, res, next) => {
     );
     res.status(200).json({
       status: "success",
-      message: "User login successfully",
+      message: "Vendor login successfully",
       data: user,
       token: token,
     });
@@ -61,10 +78,10 @@ export const login = catchAsyncError(async (req, res, next) => {
 });
 
 // get user by id
-export const getUserById = async (req, res, next) => {
+export const getVendorById = async (req, res, next) => {
   const id = req?.user?.userId;
   try {
-    const data = await User.findById(id);
+    const data = await Vendor.findById(id);
 
     res.json({
       status: "success",
@@ -79,8 +96,19 @@ export const getUserById = async (req, res, next) => {
 export const UpdateProfile = catchAsyncError(async (req, res, next) => {
   const data = req.body;
   const userId = req?.user?.userId;
+  let updatedFields = { ...data };
 
-  const updatedUser = await User.findByIdAndUpdate(userId, data, {
+  if (req.files && req.files.profileImage) {
+    let image = req.files.profileImage;
+
+    // Uploading to Cloudinary folder "my_app/images"
+    const result = await cloudinary.v2.uploader.upload(image.tempFilePath, {
+      folder: "images", // change this to your desired folder path
+    });
+
+    updatedFields.profileImage = result.secure_url; // it's better to use secure_url
+  }
+  const updatedUser = await Vendor.findByIdAndUpdate(userId, updatedFields, {
     new: true,
   });
 
@@ -91,15 +119,15 @@ export const UpdateProfile = catchAsyncError(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     data: updatedUser,
-    message: "user updated successfully!",
+    message: "vendor updated successfully!",
   });
 });
 
 export const UpdateStatus = catchAsyncError(async (req, res, next) => {
   const data = req.body;
-  const userId = req.params.id;
+  const userId = req?.user?.userId;
 
-  const updatedUser = await User.findByIdAndUpdate(
+  const updatedUser = await Vendor.findByIdAndUpdate(
     userId,
     { status: data?.status },
     {
@@ -114,14 +142,14 @@ export const UpdateStatus = catchAsyncError(async (req, res, next) => {
   res.status(200).json({
     status: "success",
     data: updatedUser,
-    message: "user status updated successfully!",
+    message: "vendor status updated successfully!",
   });
 });
 
 // Get All User
-export const getAllUsers = catchAsyncError(async (req, res, next) => {
+export const getAllVendor = catchAsyncError(async (req, res, next) => {
   try {
-    const users = await User.find();
+    const users = await Vendor.find();
     res.status(200).json({
       status: "success",
       data: users,
@@ -135,16 +163,16 @@ export const getAllUsers = catchAsyncError(async (req, res, next) => {
   }
 });
 // delet user
-export const deleteCustomerById = async (req, res, next) => {
+export const deleteVendorById = async (req, res, next) => {
   const id = req?.user?.userId;
   try {
-    const delCustomer = await User.findByIdAndDelete(id);
+    const delCustomer = await Vendor.findByIdAndDelete(id);
     if (!delCustomer) {
-      return res.json({ status: "fail", message: "Customer not Found" });
+      return res.json({ status: "fail", message: "Vendor not Found" });
     }
     res.json({
       status: "success",
-      message: "User deleted successfully!",
+      message: "Vendor deleted successfully!",
     });
   } catch (error) {
     console.log(error);
