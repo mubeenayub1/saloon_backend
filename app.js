@@ -8,6 +8,7 @@ import cors from "cors";
 import http from "http";
 import userRoute from "./routes/userRoute.js";
 import vendorRoute from "./routes/vendorRoute.js";
+import serviceRoute from "./routes/serviceRoute.js";
 connectDB();
 import { createServer } from "http";
 // Use Middlewares
@@ -27,6 +28,7 @@ const server = createServer(app);
 
 app.use("/user", userRoute);
 app.use("/vendor", vendorRoute);
+app.use("/service", serviceRoute);
 
 app.get("/", async (req, res) => {
   res.send("App Is Running");

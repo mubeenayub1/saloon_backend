@@ -28,10 +28,6 @@ export const registerVendor = catchAsyncError(async (req, res, next) => {
       });
 
       updatedFields.profileImage = result.secure_url; // it's better to use secure_url
-    } else {
-      return res
-        .status(400)
-        .json({ message: "Please select profile image", status: "fail" });
     }
     const newUser = await Vendor.create(updatedFields);
     const token = jwt.sign(
