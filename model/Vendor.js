@@ -2,6 +2,38 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const vendorSchema = new Schema({
+  name: {
+    type: String,
+    require: true,
+  },
+  gallery: {
+    type: Array,
+  },
+  video: {
+    type: String,
+    require: true,
+  },
+  surname: {
+    type: String,
+    require: true,
+  },
+  gender: {
+    type: String,
+    enum: ["male", "female", "other"],
+    default: "male",
+  },
+  age: {
+    type: String,
+    require: true,
+  },
+  cnic: {
+    type: String,
+    require: true,
+  },
+  license: {
+    type: String,
+    require: true,
+  },
   profileImage: {
     type: String,
     require: true,
@@ -21,7 +53,6 @@ const vendorSchema = new Schema({
   userName: {
     type: String,
   },
-
   email: {
     type: String,
     require: true,
@@ -30,18 +61,21 @@ const vendorSchema = new Schema({
     type: Date,
     default: Date.now,
   },
-
   password: {
+    type: String,
+    require: true,
+  },
+  locationAddres: {
+    type: String,
+  },
+  phone: {
     type: String,
     require: true,
   },
   location: {
     type: String,
-    require: true,
-  },
-  phone: {
-    type: String,
-    require: true,
+    enum: ["on", "off"],
+    default: "off",
   },
   listingPlan: {
     type: String,
@@ -50,8 +84,16 @@ const vendorSchema = new Schema({
   },
   status: {
     type: String,
+    enum: ["offline", "online"],
+    default: "offline",
+  },
+  accountStatus: {
+    type: String,
     enum: ["pending", "approved", "blocked"],
     default: "pending",
+  },
+  openingTime: {
+    type: Array,
   },
 });
 

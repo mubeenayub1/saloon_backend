@@ -1,26 +1,21 @@
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
-const serviceSchema = new Schema({
+const subcategorySchema = new Schema({
+  // image: {
+  //   type: String,
+  //   require: true,
+  // },
   categoryId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Category",
     required: true,
   },
-  subcategoryId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "SubCategory",
-    required: true,
-  },
-  charges: {
+  name: {
     type: String,
+    require: true,
+  },
 
-  },
-  createdBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
   createdAt: {
     type: Date,
     default: Date.now,
@@ -32,4 +27,4 @@ const serviceSchema = new Schema({
   },
 });
 
-export const Service = mongoose.model("Service", serviceSchema);
+export const SubCategory = mongoose.model("SubCategory", subcategorySchema);

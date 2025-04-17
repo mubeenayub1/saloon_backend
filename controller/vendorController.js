@@ -118,7 +118,50 @@ export const UpdateProfile = catchAsyncError(async (req, res, next) => {
     message: "vendor updated successfully!",
   });
 });
+export const ProfileSetup = catchAsyncError(async (req, res, next) => {
+  const data = req.body;
+  const userId = req?.user?.userId;
+  let updatedFields = { ...data };
 
+  if (req.files && req.files.cnic) {
+    let image = req.files.cnic;
+
+    // Uploading to Cloudinary folder "my_app/images"
+    const result = await cloudinary.v2.uploader.upload(image.tempFilePath, {
+      folder: "images", // change this to your desired folder path
+    });
+
+    updatedFields.cnic = result.secure_url; // it's better to use secure_url
+  } else {
+    return res.status(400).json({ message: "Please upload cnic" });
+  }
+  if (req.files && req.files.license) {
+    let image = req.files.license;
+
+    // Uploading to Cloudinary folder "my_app/images"
+    const result = await cloudinary.v2.uploader.upload(image.tempFilePath, {
+      folder: "images", // change this to your desired folder path
+    });
+
+    updatedFields.license = result.secure_url; // it's better to use secure_url
+  } else {
+    return res.status(400).json({ message: "Please upload license" });
+  }
+
+  const updatedUser = await Vendor.findByIdAndUpdate(userId, updatedFields, {
+    new: true,
+  });
+
+  if (!updatedUser) {
+    return res.status(404).json({ message: "User not found" });
+  }
+
+  res.status(200).json({
+    status: "success",
+    data: updatedUser,
+    message: "vendor updated successfully!",
+  });
+});
 export const UpdateStatus = catchAsyncError(async (req, res, next) => {
   const data = req.body;
   const userId = req?.user?.userId;

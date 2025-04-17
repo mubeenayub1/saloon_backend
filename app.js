@@ -9,6 +9,8 @@ import http from "http";
 import userRoute from "./routes/userRoute.js";
 import vendorRoute from "./routes/vendorRoute.js";
 import serviceRoute from "./routes/serviceRoute.js";
+import categoryRouter from "./routes/categoryRoute.js";
+import subcategoryRouter from "./routes/subcategoryRoute.js";
 connectDB();
 import { createServer } from "http";
 // Use Middlewares
@@ -29,6 +31,8 @@ const server = createServer(app);
 app.use("/user", userRoute);
 app.use("/vendor", vendorRoute);
 app.use("/service", serviceRoute);
+app.use("/category", categoryRouter);
+app.use("/subcategory", subcategoryRouter);
 
 app.get("/", async (req, res) => {
   res.send("App Is Running");

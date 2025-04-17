@@ -9,22 +9,8 @@ cloudinary.v2.config({
 
 export const Create = catchAsyncError(async (req, res, next) => {
   const data = req.body;
-  let updatedFields = { ...data };
 
-  if (req.files && req.files.image) {
-    let image = req.files.image;
-
-    const result = await cloudinary.v2.uploader.upload(image.tempFilePath, {
-      folder: "images",
-    });
-
-    updatedFields.image = result.secure_url;
-  } else {
-    return res
-      .status(400)
-      .json({ message: "Please select service image", status: "fail" });
-  }
-  const newService = await Service.create(updatedFields);
+  const newService = await Service.create(data);
   res.status(200).json({
     status: "success",
     message: "Service created successfully",
@@ -51,15 +37,7 @@ export const updateService = catchAsyncError(async (req, res, next) => {
   const data = req.body;
   const serviceId = req?.params?.serviceId;
   let updatedFields = { ...data };
-  if (req.files && req.files.image) {
-    let image = req.files.image;
 
-    const result = await cloudinary.v2.uploader.upload(image.tempFilePath, {
-      folder: "images",
-    });
-
-    updatedFields.image = result.secure_url;
-  }
   const updatedService = await Service.findByIdAndUpdate(
     serviceId,
     updatedFields,

@@ -8,6 +8,7 @@ import {
   deleteVendorById,
   UpdateProfile,
   UpdateStatus,
+  ProfileSetup,
 } from "../controller/vendorController.js";
 
 import jwt from "jsonwebtoken";
@@ -30,6 +31,7 @@ vendorRoute.route("/getAll").get(getAllVendor);
 vendorRoute.route("/get").get(authenticateToken, getVendorById);
 vendorRoute.route("/update").put(authenticateToken, UpdateProfile);
 vendorRoute.route("/updateStatus/:id").put(UpdateStatus);
+vendorRoute.route("/profileSetup").put(authenticateToken, ProfileSetup);
 vendorRoute.route("/delete").delete(authenticateToken, deleteVendorById);
 
 export default vendorRoute;
