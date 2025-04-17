@@ -32,7 +32,22 @@ export const getServiceById = async (req, res, next) => {
     next(error);
   }
 };
+export const getServiceByUserId = async (req, res, next) => {
+  const id = req?.params?.userId;
+  try {
+    const data = await Service.findById({ createdBy: id })
+      .populate("categoryId")
+      .populate("subcategoryId");
 
+    res.json({
+      status: "success",
+      data: data,
+    });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
 export const updateService = catchAsyncError(async (req, res, next) => {
   const data = req.body;
   const serviceId = req?.params?.serviceId;

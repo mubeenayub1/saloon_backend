@@ -93,7 +93,14 @@ const vendorSchema = new Schema({
     default: "pending",
   },
   openingTime: {
-    type: Array,
+    weekdays: {
+      from: { type: String, required: true },  // e.g. "08:00 AM"
+      to: { type: String, required: true },    // e.g. "09:30 PM"
+    },
+    weekends: {
+      from: { type: String, required: true },  // e.g. "09:00 AM"
+      to: { type: String, required: true },    // e.g. "01:00 PM"
+    },
   },
 });
 
