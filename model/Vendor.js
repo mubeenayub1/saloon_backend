@@ -4,18 +4,15 @@ const Schema = mongoose.Schema;
 const vendorSchema = new Schema({
   name: {
     type: String,
-    require: true,
   },
   gallery: {
     type: Array,
   },
   video: {
     type: String,
-    require: true,
   },
   surname: {
     type: String,
-    require: true,
   },
   gender: {
     type: String,
@@ -24,34 +21,28 @@ const vendorSchema = new Schema({
   },
   age: {
     type: String,
-    require: true,
   },
   cnic: {
     type: String,
-    require: true,
   },
   license: {
     type: String,
-    require: true,
   },
   profileImage: {
     type: String,
-    require: true,
   },
   title: {
     type: String,
-    require: true,
   },
   shopName: {
     type: String,
-    require: true,
   },
   description: {
     type: String,
-    require: true,
   },
   userName: {
     type: String,
+    require: true,
   },
   email: {
     type: String,
@@ -70,7 +61,6 @@ const vendorSchema = new Schema({
   },
   phone: {
     type: String,
-    require: true,
   },
   location: {
     type: String,
@@ -94,12 +84,12 @@ const vendorSchema = new Schema({
   },
   openingTime: {
     weekdays: {
-      from: { type: String, required: true },  // e.g. "08:00 AM"
-      to: { type: String, required: true },    // e.g. "09:30 PM"
+      from: { type: String }, // e.g. "08:00 AM"
+      to: { type: String }, // e.g. "09:30 PM"
     },
     weekends: {
-      from: { type: String, required: true },  // e.g. "09:00 AM"
-      to: { type: String, required: true },    // e.g. "01:00 PM"
+      from: { type: String }, // e.g. "09:00 AM"
+      to: { type: String }, // e.g. "01:00 PM"
     },
   },
 });
