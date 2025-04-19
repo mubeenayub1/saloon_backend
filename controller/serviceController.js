@@ -33,9 +33,9 @@ export const getServiceById = async (req, res, next) => {
   }
 };
 export const getServiceByUserId = async (req, res, next) => {
-  const id = req?.params?.userId;
+  const id = req?.params?.vendorId;
   try {
-    const data = await Service.findById({ createdBy: id })
+    const data = await Service.find({ createdBy: id })
       .populate("categoryId")
       .populate("subcategoryId");
 

@@ -14,11 +14,10 @@ const serviceSchema = new Schema({
   },
   charges: {
     type: String,
-
   },
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+    ref: "Vendor",
     required: true,
   },
   createdAt: {

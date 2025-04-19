@@ -13,7 +13,7 @@ serviceRoute.route("/create").post(Create);
 serviceRoute.route("/getAll").get(getAllService);
 serviceRoute.route("/get/:serviceId").get(getServiceById);
 serviceRoute.route("/update/:serviceId").put(updateService);
-serviceRoute.route("/byUserId/:userId").get(getServiceByUserId);
+serviceRoute.route("/byVendorId/:vendorId").get(getServiceByUserId);
 serviceRoute.route("/delete/:serviceId").delete(deleteServiceById);
 
 export default serviceRoute;

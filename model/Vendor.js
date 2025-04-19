@@ -84,12 +84,12 @@ const vendorSchema = new Schema({
   },
   openingTime: {
     weekdays: {
-      from: { type: String }, // e.g. "08:00 AM"
-      to: { type: String }, // e.g. "09:30 PM"
+      from: { type: String },
+      to: { type: String },
     },
     weekends: {
-      from: { type: String }, // e.g. "09:00 AM"
-      to: { type: String }, // e.g. "01:00 PM"
+      from: { type: String },
+      to: { type: String },
     },
   },
 });
