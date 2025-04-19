@@ -107,7 +107,38 @@ export const UpdateProfile = catchAsyncError(async (req, res, next) => {
   const updatedUser = await Vendor.findByIdAndUpdate(userId, updatedFields, {
     new: true,
   });
+  if (req.files && req.files.gallery) {
+    const gallery = Array.isArray(req.files.gallery)
+      ? req.files.gallery
+      : [req.files.gallery];
 
+    if (gallery.length > 5) {
+      return res.status(400).json({
+        message: "You can upload a maximum of 5 images in the gallery.",
+      });
+    }
+
+    const uploadedGalleryUrls = [];
+
+    for (let img of gallery) {
+      const result = await cloudinary.v2.uploader.upload(img.tempFilePath, {
+        folder: "gallery",
+      });
+      uploadedGalleryUrls.push(result.secure_url);
+    }
+
+    updatedFields.gallery = uploadedGalleryUrls;
+  }
+  if (req.files && req.files.video) {
+    const video = req.files.video;
+
+    const result = await cloudinary.v2.uploader.upload(video.tempFilePath, {
+      folder: "videos",
+      resource_type: "video", // Important for videos
+    });
+
+    updatedFields.video = result.secure_url;
+  }
   if (!updatedUser) {
     return res.status(404).json({ message: "User not found" });
   }
