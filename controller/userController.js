@@ -1,6 +1,7 @@
 import { catchAsyncError } from "../middleware/catchAsyncError.js";
 // import { Customer } from "../model/customer.js";
 import { User } from "../model/User.js";
+import { Vendor } from "../model/Vendor.js";
 import jwt from "jsonwebtoken";
 import cloudinary from "cloudinary";
 cloudinary.v2.config({
@@ -148,6 +149,63 @@ export const deleteCustomerById = async (req, res, next) => {
     });
   } catch (error) {
     console.log(error);
+    next(error);
+  }
+};
+export const markFavorite = async (req, res, next) => {
+  const userId = req.user.userId; // Assuming you're using auth
+  const vendorId = req.params.vendorId;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    if (user.favoriteVendors.includes(vendorId)) {
+      return res.status(400).json({ message: "Vendor already favorited" });
+    }
+
+    user.favoriteVendors.push(vendorId);
+    await user.save();
+
+    res.json({ status: "success", message: "Vendor favorited!" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// ❌ Remove from favorites
+export const unmarkFavorite = async (req, res, next) => {
+  const userId = req.user.userId;
+  const vendorId = req.params.vendorId;
+
+  try {
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { $pull: { favoriteVendors: vendorId } },
+      { new: true }
+    );
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    res.json({ status: "success", message: "Vendor unfavorited!" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// 📄 Get all favorite vendors
+export const getFavoriteVendors = async (req, res, next) => {
+  const userId = req.user.userId;
+
+  try {
+    const user = await User.findById(userId).populate("favoriteVendors");
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    res.json({
+      status: "success",
+      data: user.favoriteVendors,
+    });
+  } catch (error) {
     next(error);
   }
 };

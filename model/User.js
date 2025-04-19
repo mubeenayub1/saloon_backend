@@ -29,6 +29,12 @@ const userSchema = new Schema({
     type: String,
     require: true,
   },
+  favoriteVendors: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Vendor",
+    },
+  ],
   status: {
     type: String,
     enum: ["pending", "approved", "blocked"],
