@@ -38,7 +38,7 @@ userRoute
   .post(authenticateToken, markFavorite);
 userRoute
   .route("/unmarkFavorite/:vendorId")
-  .delete(authenticateToken, markFavorite);
+  .delete(authenticateToken, unmarkFavorite);
 userRoute.route("/getFavorite").get(authenticateToken, getFavoriteVendors);
 
 // router.post("/mark/:vendorId", isAuthenticated, markFavorite);
